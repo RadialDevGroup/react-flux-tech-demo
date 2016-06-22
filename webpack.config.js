@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 
@@ -10,10 +11,13 @@ module.exports = {
     filename: 'app.js'
   },
   plugins: [
+    //provides variables by default to all modules
     new webpack.ProvidePlugin({
       'React': 'react',
       'ReactDom': 'react-dom'
     }),
+
+    // combined with 'html-webpack-template' below, creates a default html document.
     new HtmlWebpackPlugin({
       // Required
       inject: false,
@@ -24,7 +28,14 @@ module.exports = {
       appMountId: 'app'
       // and any other config options from html-webpack-plugin
       // https://github.com/ampedandwired/html-webpack-plugin#configuration
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        context: path.join(__dirname, 'assets'),
+        from: '**/*',
+        to: path.join(__dirname, 'build', 'assets')
+      }
+    ])
   ],
   module: {
     loaders: [
