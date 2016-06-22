@@ -14,7 +14,8 @@ module.exports = {
     //provides variables by default to all modules
     new webpack.ProvidePlugin({
       'React': 'react',
-      'ReactDom': 'react-dom'
+      'ReactDom': 'react-dom',
+      'Redux': 'redux'
     }),
 
     // combined with 'html-webpack-template' below, creates a default html document.
