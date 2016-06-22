@@ -1,10 +1,8 @@
-let id = 0;
-
 export default function(state, action) {
   switch(action.type) {
     case 'ADD_TODO':
       return {
-        id: id++,
+        id: action.id,
         text: action.text,
         completed: false
       }

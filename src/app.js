@@ -1,36 +1,31 @@
 import _ from 'lodash';
-import todos from 'reducers/todos';
-import Layout from 'components/layout'
-import TodoList from 'components/todo-list'
 
-const store = Redux.createStore((state = {}, action) => {
-  return {
-    todos: todos(state.todos, action),
-  };
-})
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
-const checkTodo = function(id) { store.dispatch({type: 'TOGGLE_TODO', id: id }); }
+import store from 'store';
 
-const addTodo = function(text) {
-  if ( _.isEmpty(text) ) return false;
-  store.dispatch({type: 'ADD_TODO', text});
-}
+import Todo from 'actions/todo';
+
+import Layout from 'components/layout';
+import TodoList from 'components/todo-list';
 
 function render() {
   ReactDom.render(
     <Layout>
       <TodoList
         todos={ store.getState().todos }
-        onCheck={ checkTodo }
-        onAdd={ addTodo }
+        onCheck={ id => store.dispatch(Todo.toggle(id)) }
+        onAdd={ text => store.dispatch(Todo.create(text)) }
       />
     </Layout>, document.getElementById('app'));
 }
 
 render();
+
 store.subscribe(render);
 
-addTodo("Go Shopping");
-addTodo("Lern Redux");
-addTodo("Program Functionally");
-addTodo("Make todos SMART");
+store.dispatch(Todo.create("Go Shopping"));
+store.dispatch(Todo.create("Lern Redux"));
+store.dispatch(Todo.create("Program Functionally"));
+store.dispatch(Todo.create("Make todos SMART"));
