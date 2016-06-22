@@ -1,0 +1,6 @@
+--colors
+--include spec/spec-helper.js
+--reporter spec
+--require source-map-support/register
+--webpack-config webpack.config-test.js
+spec/**/*-spec.js

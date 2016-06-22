@@ -4,7 +4,7 @@
   "description": "A proof-of-concept example how do build an offile react app with conditional persistence",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha-webpack"
   },
   "author": "",
   "license": "MIT",
@@ -21,9 +21,15 @@
     "html-webpack-template": "^5.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "redux": "^3.5.2",
     "webpack": "^1.13.1"
   },
   "devDependencies": {
-    "webpack-dev-server": "^1.14.1"
+    "chai": "^3.5.0",
+    "deep-freeze": "0.0.1",
+    "mocha": "^2.5.3",
+    "source-map-support": "^0.4.0",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-node-externals": "^1.2.0"
   }
 }
