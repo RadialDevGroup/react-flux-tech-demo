@@ -12,21 +12,35 @@ export default React.createClass({
   },
 
   check: function(id) {
-    this.props.items.check(id);
+    this.props.onCheck(id);
+  },
+
+  addTodo: function(evt) {
+    this.props.onAdd(evt.target.value);
+    evt.target.value = '';
   },
 
   renderItems: function(item) {
     return (
       <Item key={ item.id} >
-        <Checkbox checked = { item.done } onCheck={ this.check } id={item.id} />
-        { item.name }
+        <Checkbox checked = { item.completed } onCheck={ this.check } id={item.id} />
+        { item.text }
       </Item>
     );
+  },
+
+  catchEnter: function(evt) {
+    if( evt.keyCode == '13' ) {
+      evt.preventDefault();
+
+      this.addTodo(evt);
+    }
   },
 
   render: function() {
     return (
       <List>
+        <input type="text" onBlur = { this.addTodo } onKeyDown = { this.catchEnter }  placeholder = "new todo" />
         {this.props.items.map(this.renderItems)}
       </List>
     );
