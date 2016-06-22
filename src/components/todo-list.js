@@ -41,7 +41,7 @@ export default React.createClass({
     return (
       <List>
         <input type="text" onBlur = { this.addTodo } onKeyDown = { this.catchEnter }  placeholder = "new todo" />
-        {this.props.items.map(this.renderItems)}
+        {this.props.todos.map(this.renderItems)}
       </List>
     );
   }
