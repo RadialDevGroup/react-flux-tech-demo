@@ -32,4 +32,19 @@ describe('todos reducer', function() {
 
     expect(todos(stateBefore, action)).to.deep.equal(stateAfter);
   })
+
+  it('edits a todo', function() {
+    const stateBefore = [
+      {id: 0, text: 'Learn Redux', completed: false }
+    ];
+    const action = {type: 'EDIT_TODO', id: 0, externalId: 11};
+    const stateAfter = [
+      {id: 0, text: 'Learn Redux', completed: false, externalId: 11},
+    ];
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(todos(stateBefore, action)).to.deep.equal(stateAfter);
+  })
 });

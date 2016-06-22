@@ -15,6 +15,17 @@ describe('todo reducer', function() {
     expect(todo(stateBefore, action)).to.deep.equal(stateAfter);
   });
 
+   it('updates a todo', function() {
+    const stateBefore = {id: 0, text: 'Learn Redux', completed: false};
+    const action = {type: 'EDIT_TODO', id: 0, externalId: 13};
+    const stateAfter = {id: 0, text: 'Learn Redux', completed: false, externalId: 13};
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(todo(stateBefore, action)).to.deep.equal(stateAfter);
+  });
+
   context('when todo is not completed', function() {
     const stateBefore = { id: 1, text: 'Go shopping', completed: false };
     const stateAfter = { id: 1, text: 'Go shopping', completed: true };

@@ -25,7 +25,3 @@ render();
 
 store.subscribe(render);
 
-store.dispatch(Todo.create("Go Shopping"));
-store.dispatch(Todo.create("Lern Redux"));
-store.dispatch(Todo.create("Program Functionally"));
-store.dispatch(Todo.create("Make todos SMART"));
