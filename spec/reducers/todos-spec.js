@@ -5,20 +5,10 @@ describe('todos reducer', function() {
     expect(todos).to.be.a('function');
   });
 
-  it('add todo', function() {
+  it('adds a todo', function() {
     const stateBefore = [];
-    const action = {
-      type: 'ADD_TODO',
-      id: 0,
-      text: 'Learn Redux'
-    };
-    const stateAfter = [
-      {
-        id: 0,
-        text: 'Learn Redux',
-        completed: false
-      }
-    ];
+    const action = {type: 'ADD_TODO', id: 0, text: 'Learn Redux' };
+    const stateAfter = [{id: 0, text: 'Learn Redux', completed: false}];
 
     deepFreeze(stateBefore)
     deepFreeze(action);
@@ -26,36 +16,15 @@ describe('todos reducer', function() {
     expect(todos(stateBefore, action)).to.deep.equal(stateAfter);
   });
 
-  it('toggle todo', function() {
+  it('toggles a todo', function() {
     const stateBefore = [
-      {
-        id: 0,
-        text: 'Learn Redux',
-        completed: false
-      },
-      {
-        id: 1,
-        text: 'Go shopping',
-        completed: false
-      }
+      {id: 0, text: 'Learn Redux', completed: false },
+      {id: 1, text: 'Go shopping', completed: false }
     ];
-
-    const action = {
-      type: 'TOGGLE_TODO',
-      id: 1
-    };
-
-     const stateAfter = [
-      {
-        id: 0,
-        text: 'Learn Redux',
-        completed: false
-      },
-      {
-        id: 1,
-        text: 'Go shopping',
-        completed: true
-      }
+    const action = {type: 'TOGGLE_TODO', id: 1};
+    const stateAfter = [
+      {id: 0, text: 'Learn Redux', completed: false},
+      {id: 1, text: 'Go shopping', completed: true}
     ];
 
     deepFreeze(stateBefore);

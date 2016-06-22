@@ -5,18 +5,10 @@ describe('todo reducer', function() {
     expect(todo).to.be.a('function');
   });
 
-  it('should return a new todo', function() {
+  it('returns a new todo', function() {
     const stateBefore = undefined;
-    const action = {
-      type: 'ADD_TODO',
-      id: 0,
-      text: 'Learn Redux'
-    };
-    const stateAfter = {
-      id: 0,
-      text: 'Learn Redux',
-      completed: false
-    };
+    const action = {type: 'ADD_TODO', id: 0, text: 'Learn Redux'};
+    const stateAfter = {id: 0, text: 'Learn Redux', completed: false};
 
     deepFreeze(action);
 
