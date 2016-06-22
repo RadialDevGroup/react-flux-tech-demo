@@ -15,14 +15,31 @@ describe('todo reducer', function() {
     expect(todo(stateBefore, action)).to.deep.equal(stateAfter);
   });
 
-  it('toggles a todo\'s completed field', function() {
+  context('when todo is not completed', function() {
     const stateBefore = { id: 1, text: 'Go shopping', completed: false };
-    const action = { id: 1, type: 'TOGGLE_TODO' };
     const stateAfter = { id: 1, text: 'Go shopping', completed: true };
 
     deepFreeze(stateBefore);
-    deepFreeze(action);
 
-    expect(todo(stateAfter, action)).to.deep.equal(stateAfter);
+    it('toggles a todo\'s completed field', function() {
+      const action = { id: 1, type: 'TOGGLE_TODO' };
+      deepFreeze(action);
+
+      expect(todo(stateAfter, action)).to.deep.equal(stateAfter);
+    });
+  });
+
+  context('when todo iscompleted', function() {
+    const stateBefore = { id: 1, text: 'Go shopping', completed: true };
+    const stateAfter = { id: 1, text: 'Go shopping', completed: false };
+
+    deepFreeze(stateBefore);
+
+    it('toggles a todo\'s completed field', function() {
+      const action = { id: 1, type: 'TOGGLE_TODO' };
+      deepFreeze(action);
+
+      expect(todo(stateAfter, action)).to.deep.equal(stateAfter);
+    });
   });
 });

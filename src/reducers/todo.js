@@ -6,13 +6,14 @@ export default function(state, action) {
         text: action.text,
         completed: false
       }
+
     case 'TOGGLE_TODO':
       if (state.id != action.id) {
         return state;
       }
 
       return Object.assign({}, state, {
-        completed: !state.complete
+        completed: !state.completed
       });
     default:
       return state;
