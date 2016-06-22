@@ -22,7 +22,11 @@ webpack
 
 ## Tests
 
-N/A currently spiking on infrastructure
+*heavily based on: [react-boilerplate](https://github.com/CodingZeal/react-boilerplate) by Randy Coulman of [Zeal](https://codingzeal.com/)*
+
+```
+npm test
+```
 
 ## Process
 
