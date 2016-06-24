@@ -1,26 +1,26 @@
 import _ from 'lodash';
+import composeReducer from 'lib/compose-reducer';
 
-export default function(state, action) {
-  switch(action.type) {
-    case 'ADD_TODO':
-      return Object.assign({completed: false}, _.pick(action, 'id', 'text', 'externalId', 'completed'));
+export default composeReducer({
+  ADD_TODO: function(state, action) {
+    return Object.assign({completed: false}, _.pick(action, 'id', 'text', 'externalId', 'completed'));
+  },
 
-    case 'TOGGLE_TODO':
-      if (state.id != action.id) {
-        return state;
-      }
-
-      return Object.assign({}, state, {
-        completed: !state.completed
-      });
-
-    case 'EDIT_TODO':
-      if (state.id != action.id) {
-        return state;
-      }
-
-      return Object.assign({}, state, _.pick(action, 'externalId', 'text', 'completed'));
-    default:
+  TOGGLE_TODO: function(state, action) {
+    if (state.id != action.id) {
       return state;
+    }
+
+    return Object.assign({}, state, {
+      completed: !state.completed
+    });
+  },
+
+  EDIT_TODO: function(state, action) {
+    if (state.id != action.id) {
+      return state;
+    }
+
+    return Object.assign({}, state, _.pick(action, 'externalId', 'text', 'completed'));
   }
-}
+});

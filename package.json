@@ -25,7 +25,9 @@
     "react-dom": "^15.1.0",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.1",
+    "node-sass": "^3.8.0",
+    "sass-loader": "^3.2.1",
   },
   "devDependencies": {
     "chai": "^3.5.0",
