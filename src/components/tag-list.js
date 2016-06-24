@@ -7,7 +7,7 @@ import _ from 'lodash'
 export default React.createClass({
   getDefaultProps: function() {
     return {
-      todos: []
+      tags: []
     }
   },
 
@@ -15,7 +15,7 @@ export default React.createClass({
     this.props.onCheck(id);
   },
 
-  addTodo: function(evt) {
+  addTag: function(evt) {
     this.props.onAdd(evt.target.value);
     evt.target.value = '';
   },
@@ -23,7 +23,6 @@ export default React.createClass({
   renderItems: function(item) {
     return (
       <Item key={ item.id} >
-        <Checkbox checked = { item.completed } onCheck={ this.check } id={item.id} />
         { item.text }
       </Item>
     );
@@ -33,15 +32,15 @@ export default React.createClass({
     if( evt.keyCode == '13' ) {
       evt.preventDefault();
 
-      this.addTodo(evt);
+      this.addTag(evt);
     }
   },
 
   render: function() {
     return (
       <List>
-        <input type="text" onBlur = { this.addTodo } onKeyDown = { this.catchEnter }  placeholder = "new todo" />
-        {this.props.todos.map(this.renderItems)}
+        <input type="text" onBlur = { this.addTag } onKeyDown = { this.catchEnter }  placeholder = "new tag" />
+        {this.props.tags.map(this.renderItems)}
       </List>
     );
   }

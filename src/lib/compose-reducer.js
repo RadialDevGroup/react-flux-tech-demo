@@ -1,7 +1,15 @@
 import _ from 'lodash';
 
 export default function(mapping) {
+  let resolvedState = function(state) {
+    return mapping['DEFAULT'] || state;
+  }
+
   return function(state, action) {
-    return _.isFunction(mapping[action.type]) ? _.invoke(mapping, action.type, state, action) : state;
+    if (_.isFunction(mapping[action.type])) {
+      return _.invoke(mapping, action.type, state, action);
+    }
+
+    return resolvedState(state);
   }
 }

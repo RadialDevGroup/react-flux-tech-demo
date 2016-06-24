@@ -1,26 +1,53 @@
+require("assets/css/app.css");
+
 import store from 'store';
 
-import Todo from 'actions/todo';
+store.dispact = (function(){
+  return function() {
+    console.log(arguments);
+    store.dispatch(arguments);
+  };
+})(store.dispatch);
+
+import TodoActions from 'actions/todo';
+import TagActions from 'actions/tag';
 
 import Layout from 'components/layout';
 import TodoList from 'components/todo-list';
+import TagList from 'components/tag-list';
+import Page from 'components/page';
 
-function render() {
+store.dispatch(TodoActions.fetch());
+store.dispatch(TagActions.fetch());
+
+store.subscribe(() => {
+  let state = store.getState();
+
   ReactDom.render(
     <Layout>
-      <TodoList
-        todos={ store.getState().todos }
-        onCheck={ id => store.dispatch(Todo.toggle(id)) }
-        onAdd={ text => store.dispatch(Todo.create(text)) }
-      />
+      <ul class="tabs">
+        <li onClick = { Page.link('') } >Todo list </li>
+        <li onClick = { Page.link('tag-list') } >Tag list </li>
+      </ul>
+      <Page default>
+        <TodoList
+          todos={ state.todos }
+          onCheck={ id => store.dispatch(TodoActions.toggle(id)) }
+          onAdd={ text => store.dispatch(TodoActions.create(text)) }
+        />
+      </Page>
+
+      <Page name="tag-list">
+        <TagList
+          tags={ state.tags }
+          onAdd={ text => store.dispatch(TagActions.create(text)) }
+          onEdit={ (id, text) => store.dispatch(TagActions.update(id, {text})) }
+        />
+      </Page>
+
+      <Page name="tag-todo-list" />
+      <Page name="todo-tags-list" />
     </Layout>, document.getElementById('app'));
-}
 
-render();
-store.subscribe(render);
-store.dispatch(Todo.fetch());
-
-// store.dispatch(Todo.create("Go Shopping"));
-// store.dispatch(Todo.create("Lern Redux"));
-// store.dispatch(Todo.create("Program Functionally"));
-// store.dispatch(Todo.create("Make todos SMART"));
+    Page.navigateDefault();
+});
