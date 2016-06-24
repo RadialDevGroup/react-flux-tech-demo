@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-export default function(mapping) {
+export default function(mapping={}) {
   let resolvedState = function(state) {
-    return mapping['DEFAULT'] || state;
+    return state || mapping['DEFAULT'] ;
   }
 
   return function(state, action) {
