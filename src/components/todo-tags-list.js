@@ -9,7 +9,8 @@ import Item from 'components/utility/item';
 
 import Page from 'components/page';
 
-import TodoActions from 'actions/todo';
+import TodoTagActions from 'actions/todo-tag';
+import TagActions from 'actions/tag';
 
 
 export default React.createClass({
@@ -23,14 +24,20 @@ export default React.createClass({
     return () => store.dispatch(TodoActions.toggle(id));
   },
 
-  addTodo: function(evt) {
-    store.dispatch(TodoActions.create(evt.target.value));
-    evt.target.value = '';
+  addTag: function(evt) {
+    return evt => {
+      TodoTagActions.create({
+        text: evt.target.value,
+        todo_id: store.getState().currentObject.id
+      });
+
+      evt.target.value = '';
+    }
   },
 
   edit: function(id) {
     let edit = _.debounce(function(text) {
-      store.dispatch(TodoActions.update(id, {text}));
+      store.dispatch(TagActions.update(id, {text}));
     }, 500);
 
     return evt => edit(evt.target.value);
@@ -45,17 +52,10 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    console.log('did mount');
-    let forceUpdate = this.forceUpdate.bind(this);
-
-    this.unsubscribe = store.subscribe(function() {
-      console.log('called');
-      forceUpdate();
-    });
+    this.unsubscribe = store.subscribe(_.bind(this.forceUpdate, this));
   },
 
   componentWillUnmount: function() {
-    console.log("will unmount", this.unsubscribe);
     this.unsubscribe();
   },
 
@@ -69,7 +69,6 @@ export default React.createClass({
           onChange={ this.edit(item.id) } // handle innerHTML change
         />
         {' '}
-        <button onClick={ this.showTagList(item.id) }>tags</button>
       </Item>
     );
   },
@@ -78,16 +77,19 @@ export default React.createClass({
     if( evt.keyCode == '13' ) {
       evt.preventDefault();
 
-      this.addTodo(evt);
+      this.addTag(evt);
     }
   },
 
   render: function() {
     return (
-      <List>
-        <input type="text" onBlur = { this.addTodo } onKeyDown = { this.catchEnter }  placeholder = "new todo" />
-        {store.getState().todos.map(this.renderItems)}
-      </List>
+      <div>
+        <button onClick={ Page.navigate }>Home</button>
+        <List>
+          <input type="text" onBlur = { this.addTag } onKeyDown = { this.catchEnter }  placeholder = "new tag" />
+          {store.getState().filteredTags.map(this.renderItems)}
+        </List>
+      </div>
     );
   }
 });

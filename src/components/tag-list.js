@@ -1,10 +1,13 @@
 import ContentEditable from "react-contenteditable";
-import _ from 'lodash'
+import _ from 'lodash';
 
-import Checkbox from 'components/utility/checkbox'
-import List from 'components/utility/list'
-import Item from 'components/utility/item'
+import store from 'store';
 
+import Checkbox from 'components/utility/checkbox';
+import List from 'components/utility/list';
+import Item from 'components/utility/item';
+
+import TagActions from 'actions/tag';
 
 export default React.createClass({
   getDefaultProps: function() {
@@ -18,12 +21,17 @@ export default React.createClass({
   },
 
   addTag: function(evt) {
-    this.props.onAdd(evt.target.value);
-    evt.target.value = '';
+    store.dispatch(TagActions.create({
+      text: evt.target.value
+    }));
   },
 
   editTag: function(id) {
-    return evt => this.props.onEdit( id, evt.target.value)
+    let edit = _.debounce(function(text) {
+      store.dispatch(TagActions.update(id, {text}));
+    }, 500);
+
+    return evt => edit(evt.target.value);
   },
 
   renderItems: function(item) {
@@ -46,11 +54,19 @@ export default React.createClass({
     }
   },
 
+  componentDidMount: function() {
+    this.unsubscribe = store.subscribe(_.bind(this.forceUpdate, this));
+  },
+
+  componentWillUnmount: function() {
+    this.unsubscribe();
+  },
+
   render: function() {
     return (
       <List>
         <input type="text" onBlur = { this.addTag } onKeyDown = { this.catchEnter }  placeholder = "new tag" />
-        {this.props.tags.map(this.renderItems)}
+        {store.getState().tags.map(this.renderItems)}
       </List>
     );
   }

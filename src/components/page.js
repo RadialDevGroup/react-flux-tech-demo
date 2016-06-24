@@ -6,20 +6,32 @@ import Actions from 'actions/page';
 let defaultPage = null;
 let pages = [];
 
-var Page = function(props) {
-  if (! props.name && ! props.default) {
-    throw new Error('Please specify name prop or default');
-  }
-  pages = _.uniq([...pages, props.name]);
+var Page = React.createClass({
+  componentDidMount: function() {
+    this.unsubscribe = store.subscribe(this.forceUpdate.bind(this));
+  },
 
-  if(store.getState().currentPage === props.name) {
-    return (
-      <div className='page' id={props.name} >
-        { props.children }
-      </div>
-    );
-  } else return null;
-}
+  componentWillUnmount: function() {
+    this.unsubscribe();
+  },
+
+  render: function() {
+    let props = this.props;
+
+    if (! props.name && ! props.default) {
+      throw new Error('Please specify name prop or default');
+    }
+    pages = _.uniq([...pages, props.name]);
+
+    if(store.getState().currentPage === props.name) {
+      return (
+        <div className='page' id={props.name} >
+          { props.children }
+        </div>
+      );
+    } else return null;
+  }
+});
 
 let navigate = function(pageName) {
   let selectedPage = _.includes(pages, pageName) ? pageName : defaultPage;

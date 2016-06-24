@@ -22,5 +22,7 @@ export default composeReducer({
     }
 
     return Object.assign({}, state, _.pick(action, 'externalId', 'text', 'completed'));
-  }
+  },
+
+  DEFAULT: {}
 });

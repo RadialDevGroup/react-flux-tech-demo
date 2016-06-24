@@ -4,7 +4,7 @@ import _ from 'lodash';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-const SERVER = "http://localhost:3001";
+const SERVER = "https://echo-radial.herokuapp.com";
 const API_PATH = "";
 
 const REQUEST_SESSION = 'shared-todo-application-number-1-1-1-destruct';
