@@ -26,9 +26,15 @@ export default {
   },
 
   update: function(id, fields) {
-    return object.assign({}, fields, {
-      id: id, type: 'EDIT_TAG'
-    });
+    return function(dispatch, getState) {
+      dispatch(Object.assign({}, fields, {
+        id: id, type: 'EDIT_TAG'
+      }));
+
+      let tag = _.find(getState().tags, { id });
+
+      TagRepository.update(tag.externalId, _.pick(tag, 'text'));
+    }
   },
 
   fetch: function() {

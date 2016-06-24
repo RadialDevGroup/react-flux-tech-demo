@@ -34,7 +34,15 @@ let navigate = function(pageName) {
 var link = _.partial(_.partial, navigate);
 
 let navigateDefault = function(pageName) {
-  defaultPage || (defaultPage = pageName) && navigate(window.location.hash.toString().replace(/^#/, ''));
+  if(defaultPage === null) {
+    defaultPage = pageName
+    navigate(window.location.hash.toString().replace(/^#/, ''));
+    console.log(pages, window.location.hash.toString().replace(/^#/, ''));
+  }
+}
+
+let active = function(pageName) {
+  return pageName === store.getState().currentPage;
 }
 
 window.onpopstate = function(event) {
@@ -42,5 +50,5 @@ window.onpopstate = function(event) {
 };
 
 export default Object.assign(Page, {
-  link, navigate, navigateDefault
+  link, navigate, navigateDefault, active
 });

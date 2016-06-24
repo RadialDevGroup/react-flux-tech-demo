@@ -1,8 +1,10 @@
+import ContentEditable from "react-contenteditable";
+import _ from 'lodash'
+
 import Checkbox from 'components/utility/checkbox'
 import List from 'components/utility/list'
 import Item from 'components/utility/item'
 
-import _ from 'lodash'
 
 export default React.createClass({
   getDefaultProps: function() {
@@ -20,10 +22,18 @@ export default React.createClass({
     evt.target.value = '';
   },
 
+  editTag: function(id) {
+    return evt => this.props.onEdit( id, evt.target.value)
+  },
+
   renderItems: function(item) {
     return (
       <Item key={ item.id} >
-        { item.text }
+        <ContentEditable
+          html={item.text} // innerHTML of the editable div
+          disabled={false}       // use true to disable edition
+          onChange={ this.editTag(item.id) } // handle innerHTML change
+        />
       </Item>
     );
   },

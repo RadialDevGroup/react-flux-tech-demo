@@ -25,15 +25,16 @@ store.subscribe(() => {
 
   ReactDom.render(
     <Layout>
-      <ul class="tabs">
-        <li onClick = { Page.link('') } >Todo list </li>
-        <li onClick = { Page.link('tag-list') } >Tag list </li>
+      <ul className="tabs">
+        <li onClick ={ Page.link('') } className={ Page.active() ? 'active' : null } >Todo list </li>
+        <li onClick ={ Page.link('tag-list') } className={ Page.active('tag-list') ? 'active' : null } >Tag list </li>
       </ul>
       <Page default>
         <TodoList
           todos={ state.todos }
           onCheck={ id => store.dispatch(TodoActions.toggle(id)) }
           onAdd={ text => store.dispatch(TodoActions.create(text)) }
+          onEdit={ (id, text) => store.dispatch(TodoActions.update(id, {text})) }
         />
       </Page>
 

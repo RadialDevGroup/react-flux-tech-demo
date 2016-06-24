@@ -1,3 +1,3 @@
 export default function(props) {
-  return (<ul>{props.children}</ul>)
+  return (<ul className="list">{props.children}</ul>)
 }

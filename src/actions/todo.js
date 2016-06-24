@@ -36,9 +36,15 @@ export default {
   },
 
   update: function(id, fields) {
-    return object.assign({}, fields, {
-      id: id, type: 'EDIT_TODO'
-    });
+    return function(dispatch, getState) {
+      dispatch(Object.assign({}, fields, {
+        id: id, type: 'EDIT_TODO'
+      }));
+
+      let todo = _.find(getState().todos, { id });
+
+      TodoRepository.update(todo.externalId, _.pick(todo, 'text'));
+    }
   },
 
   fetch: function() {
