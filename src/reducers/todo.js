@@ -3,7 +3,7 @@ import _ from 'lodash';
 export default function(state, action) {
   switch(action.type) {
     case 'ADD_TODO':
-      return Object.assign({completed: false}, _.pick(action, 'id', 'text', 'externalId'));
+      return Object.assign({completed: false}, _.pick(action, 'id', 'text', 'externalId', 'completed'));
 
     case 'TOGGLE_TODO':
       if (state.id != action.id) {

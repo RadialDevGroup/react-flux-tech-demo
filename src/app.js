@@ -1,8 +1,3 @@
-import _ from 'lodash';
-
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
-
 import store from 'store';
 
 import Todo from 'actions/todo';
@@ -22,6 +17,10 @@ function render() {
 }
 
 render();
-
 store.subscribe(render);
+store.dispatch(Todo.fetch());
 
+// store.dispatch(Todo.create("Go Shopping"));
+// store.dispatch(Todo.create("Lern Redux"));
+// store.dispatch(Todo.create("Program Functionally"));
+// store.dispatch(Todo.create("Make todos SMART"));

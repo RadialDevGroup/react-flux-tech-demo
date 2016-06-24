@@ -5,5 +5,9 @@ function check(id, callback) {
 }
 
 export default function(props) {
-  return <input type={ 'checkbox' } checked={ props.checked } onClick={ check(props.id, props.onCheck) } />
+  return <input
+    type={ 'checkbox' }
+    checked={ props.checked }
+    onChange = { check(props.id, props.onCheck) }
+  />
 }
