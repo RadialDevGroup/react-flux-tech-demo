@@ -49,7 +49,6 @@ let navigateDefault = function(pageName) {
   if(defaultPage === null) {
     defaultPage = pageName
     navigate(window.location.hash.toString().replace(/^#/, ''));
-    console.log(pages, window.location.hash.toString().replace(/^#/, ''));
   }
 }
 

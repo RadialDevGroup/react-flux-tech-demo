@@ -1,3 +1,4 @@
+import TagRepository from 'repositories/tag';
 import { tagCounter } from 'reducers/shared/counters';
 
 export default function(dispatch, getState, {text}) {
