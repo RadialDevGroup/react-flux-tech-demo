@@ -3,14 +3,15 @@ import uuid from 'lodash-uuid';
 _.mixin(uuid, {'chain': true});
 
 import store from 'store';
+import persister from 'persister'
 
-store.dispatch = (function(dispatch){
-  return function() {
-    console.log("DISPATCHING", ...arguments);
-    dispatch(...arguments);
-    console.log("STATE", store.getState());
-  };
-})(store.dispatch);
+// store.dispatch = (function(dispatch){
+//   return function() {
+//     console.log("DISPATCHING", ...arguments);
+//     dispatch(...arguments);
+//     console.log("STATE", store.getState());
+//   };
+// })(store.dispatch);
 
 import TodoActions from 'actions/todo';
 import TagActions from 'actions/tag';
@@ -45,6 +46,7 @@ let render = () => {
 
       <Page name="tag-todo-list">
       </Page>
+
       <Page name="todo-tags-list" >
         <TodoTagsList />
       </Page>
@@ -55,5 +57,14 @@ let render = () => {
 }
 
 store.dispatch(function() {type: 'DEFAULT'});
+
+let persisters = [
+  require('persisters/todos'),
+  require('persisters/tags'),
+  require('persisters/todo-tags')
+]
+
+store.subscribe(persister(store.dispatch, store.getState, persisters));
+
 console.log(store.getState());
 render();
