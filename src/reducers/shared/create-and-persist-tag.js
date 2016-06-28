@@ -1,8 +1,7 @@
 import TagRepository from 'repositories/tag';
-import { tagCounter } from 'reducers/shared/counters';
 
 export default function(dispatch, getState, {text}) {
-  let current_id = tagCounter();
+  let current_id = _.uuid();
   dispatch({text, id: current_id, type: 'ADD_TAG'});
 
   return TagRepository.create({text}).then(response_json => {

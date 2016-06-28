@@ -11,6 +11,7 @@ import Page from 'components/page';
 
 import TodoTagActions from 'actions/todo-tag';
 import TagActions from 'actions/tag';
+import TodoActions from 'actions/todo';
 
 
 export default React.createClass({
@@ -20,19 +21,28 @@ export default React.createClass({
     }
   },
 
+  getInitialState: function() {
+    return {selectedTag: ''};
+  },
+
   check: function(id) {
     return () => store.dispatch(TodoActions.toggle(id));
   },
 
   addTag: function(evt) {
-    return evt => {
-      TodoTagActions.create({
-        text: evt.target.value,
-        todo_id: store.getState().currentObject.id
-      });
+    let actionArgs = {
+      text: evt.target.value,
+      todo_id: store.getState().currentObject.id
+    };
 
-      evt.target.value = '';
+    if(this.getTag(evt.target.value)) {
+      actionArgs.tag_id = this.getTag(evt.target.value).id;
     }
+
+    store.dispatch(TodoTagActions.create(actionArgs));
+
+    evt.target.value = '';
+    this.setState({selectedTag: ''});
   },
 
   edit: function(id) {
@@ -63,12 +73,7 @@ export default React.createClass({
     return (
       <Item key={ item.id} >
         <Checkbox checked = { item.completed } onCheck={ this.check(item.id) } id={item.id} />
-        <ContentEditable
-          html={item.text} // innerHTML of the editable div
-          disabled={false}       // use true to disable edition
-          onChange={ this.edit(item.id) } // handle innerHTML change
-        />
-        {' '}
+        {item.text}
       </Item>
     );
   },
@@ -81,13 +86,50 @@ export default React.createClass({
     }
   },
 
+  getTag: function(value) {
+    let currentEntry = new RegExp('\^' + value);
+
+    return _.find(store.getState().tags,function(tag) {
+      return currentEntry.test(tag.text);
+    });
+  },
+
+  catchKey: function(evt) {
+    this.catchEnter(evt)
+
+    this.setState({selectedTag: this.getTag(evt.target.value) && this.getTag(evt.target.value).text });
+  },
+
+  goHome: function() {
+    Page.navigate('');
+    store.dispatch(TodoActions.setCurrent());
+  },
+
+  setTagFromSelection: function(evt) {
+    let actionArgs = {
+      text: this.state.selectedTag,
+      todo_id: store.getState().currentObject.id
+    };
+
+    if(this.getTag(this.state.selectedTag)) {
+      actionArgs.tag_id = this.getTag(this.state.selectedTag).id;
+    }
+
+    store.dispatch(TodoTagActions.create(actionArgs))
+
+    this.refs.entry.value = '';
+    this.setState({selectedTag: ''});
+  },
+
   render: function() {
     return (
       <div>
-        <button onClick={ Page.navigate }>Home</button>
+        <button onClick={ this.goHome }>Home</button>
+        <h3>{store.getState().currentTodo.text}</h3>
         <List>
-          <input type="text" onBlur = { this.addTag } onKeyDown = { this.catchEnter }  placeholder = "new tag" />
-          {store.getState().filteredTags.map(this.renderItems)}
+          <input ref="entry" type="text" onKeyDown = { this.catchKey } placeholder = "new tag" />
+          <div onClick={ this.setTagFromSelection }>{this.state.selectedTag}</div>
+          { store.getState().filteredTags.map(this.renderItems) }
         </List>
       </div>
     );

@@ -18,7 +18,7 @@ function getJSON(response) {
   return response.json();
 }
 
-const model_name = _.lowerCase;
+const model_name = _.snakeCase;
 const plural_model_name = _.flow(model_name, i.pluralize.bind(i));
 
 function construct_path({model, path, id}) {
@@ -94,6 +94,7 @@ const Repository = {
       method: "POST", body: construct_payload(model, properties)
     })).then(getJSON);
   },
+
   Helpers
 };
 

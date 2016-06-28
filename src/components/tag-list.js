@@ -22,6 +22,8 @@ export default React.createClass({
 
   addTag: function(evt) {
     store.dispatch(TagActions.create(evt.target.value));
+
+    evt.target.value = '';
   },
 
   editTag: function(id) {

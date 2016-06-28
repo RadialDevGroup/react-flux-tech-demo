@@ -1,16 +1,20 @@
 require("assets/css/app.css");
+import uuid from 'lodash-uuid';
+_.mixin(uuid, {'chain': true});
 
 import store from 'store';
 
-store.dispact = (function(){
+store.dispatch = (function(dispatch){
   return function() {
-    console.log(arguments);
-    store.dispatch(arguments);
+    console.log("DISPATCHING", ...arguments);
+    dispatch(...arguments);
+    console.log("STATE", store.getState());
   };
 })(store.dispatch);
 
 import TodoActions from 'actions/todo';
 import TagActions from 'actions/tag';
+import TodoTagActions from 'actions/todo-tag';
 
 import Layout from 'components/layout';
 import TodoList from 'components/todo-list';
@@ -20,6 +24,7 @@ import Page from 'components/page';
 
 store.dispatch(TodoActions.fetch());
 store.dispatch(TagActions.fetch());
+store.dispatch(TodoTagActions.fetch());
 
 let render = () => {
   let state = store.getState();
@@ -42,7 +47,6 @@ let render = () => {
       </Page>
       <Page name="todo-tags-list" >
         <TodoTagsList />
-        { state.currentObject.model_type} Number { state.currentObject.id}
       </Page>
     </Layout>, document.getElementById('app')
   );

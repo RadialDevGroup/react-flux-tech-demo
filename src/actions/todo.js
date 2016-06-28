@@ -1,10 +1,8 @@
 import _ from 'lodash';
 import TodoRepository from 'repositories/todo';
 
-import { todoCounter } from 'reducers/shared/counters';
-
 const createFetchAction = (todo) => {
-  let baseAction = {type: 'ADD_TODO', id: todoCounter()};
+  let baseAction = {type: 'ADD_TODO', id: _.uuid()};
   let values = _.pick(todo, 'text', 'completed');
   let idSubstitution = {externalId: todo.id};
 
@@ -16,7 +14,7 @@ export default {
     if ( _.isEmpty(text) ) { return new Function(); }
 
     return function(dispatch, getState) {
-      let current_id = todoCounter();
+      let current_id = _.uuid();
       dispatch({text, id: current_id, type: 'ADD_TODO'});
 
       TodoRepository.create({text, completed: false}).then(response_json => {
@@ -58,10 +56,18 @@ export default {
   },
 
   setCurrent: function(id) {
-    return {
-      type: 'SET_CURRENT',
-      model_type: 'Todo',
-      id: id
-    };
+    if(id) {
+      return {
+        type: 'SET_CURRENT',
+        model_type: 'Todo',
+        id: id
+      };
+    } else {
+      return {
+        type: 'SET_CURRENT',
+        model_type: undefined,
+        id: null
+      }
+    }
   }
 }

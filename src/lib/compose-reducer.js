@@ -4,15 +4,15 @@ export default function(mapping={}) {
   let actionHandlers = _.pick(mapping, _.functions(mapping));
   actionHandlers['DEFAULT'] = _.partial(_.result, mapping, 'DEFAULT');
 
-  let resolvedState = function(state) {
-    return state || _.result(actionHandlers,'DEFAULT');
+  let resolvedState = function(state, index) {
+    return (index ? _.property(index)(state) : state) || _.result(actionHandlers,'DEFAULT');
   };
 
-  return function(state, action) {
+  return function(state, action, index) {
     if (_.isFunction(actionHandlers[action.type])) {
-      return _.invoke(actionHandlers, action.type, state, action);
+      let newState = _.invoke(actionHandlers, action.type, state, action);
+      return newState || _.result(actionHandlers, 'DEFAULT');
     }
-
-    return resolvedState(state);
+    return resolvedState(state, index);
   }
 }

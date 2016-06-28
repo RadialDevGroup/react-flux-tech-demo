@@ -39,7 +39,6 @@ export default React.createClass({
   showTagList: function(id) {
     return function() {
       store.dispatch(TodoActions.setCurrent(id));
-      console.log(store.getState());
       Page.navigate('todo-tags-list');
     }
   },
@@ -61,7 +60,7 @@ export default React.createClass({
 
   renderItems: function(item) {
     return (
-      <Item key={ item.id} >
+      <Item key={item.id} >
         <Checkbox checked = { item.completed } onCheck={ this.check(item.id) } id={item.id} />
         <ContentEditable
           html={item.text} // innerHTML of the editable div
@@ -79,6 +78,7 @@ export default React.createClass({
       evt.preventDefault();
 
       this.addTodo(evt);
+      return true;
     }
   },
 

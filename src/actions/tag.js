@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import TagRepository from 'repositories/tag';
 
-import { tagCounter } from 'reducers/shared/counters';
 import createAndPersistTag from 'reducers/shared/create-and-persist-tag';
 
 const createFetchAction = (todo) => {
-  let baseAction = {type: 'ADD_TAG', id: tagCounter() };
+  let baseAction = {type: 'ADD_TAG', id: _.uuid() };
   let values = _.pick(todo, 'text');
   let idSubstitution = {externalId: todo.id};
 
@@ -16,7 +15,14 @@ export default {
   create: function(text) {
     if ( _.isEmpty(text) ) { return new Function() }
 
-    return _.partial(createAndPersistTag, _, _, {text});
+    return function(dispatch, getState) {
+      let current_id = _.uuid();
+      dispatch({text, id: current_id, type: 'ADD_TAG'});
+
+      return TagRepository.create({text}).then(response_json => {
+        dispatch({type: 'EDIT_TAG', externalId: response_json.id, id: current_id });
+      }, _.bind(console.log, console, "rejected", _, 'TAGID: ' + current_id));
+    }
   },
 
   update: function(id, fields) {
