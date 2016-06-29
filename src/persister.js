@@ -13,11 +13,20 @@ export default function(dispatch, getState, persisters = [], sync) {
         return;
       }
 
-      return persister(state, function(action) {
-        processing = false;
-        console.log(action);
-        dispatch(action);
-      });
+      return persister(state, (function() {
+        let called = false;
+        return function(action) {
+          if (called === true) {
+            console.error('persister dispatch called more than once -- please call dispatch only once per persitence pass');
+            return;
+          }
+
+          called = true;
+          processing = false;
+          console.log(action);
+          dispatch(action);
+        }
+      })());
     })) {
       processing = true;
     } else {
