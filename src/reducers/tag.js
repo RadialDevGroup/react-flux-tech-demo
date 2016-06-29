@@ -2,6 +2,10 @@ import _ from 'lodash';
 import composeReducer from 'lib/compose-reducer';
 
 export default composeReducer({
+  SYNC_TAG: function(state, action) {
+    return Object.assign({id: action.id}, state, _.pick(action, 'externalId', 'text', 'persisted'));
+  },
+
   ADD_TAG: function(state, action) {
     return Object.assign({completed: false}, _.pick(action, 'id', 'text', 'externalId'));
   },
@@ -11,7 +15,7 @@ export default composeReducer({
       return state;
     }
 
-    return Object.assign({}, state, _.pick(action, 'externalId', 'text'));
+    return Object.assign({}, state, {persisted: false}, _.pick(action, 'externalId', 'text', 'persisted'));
   },
 
   DEFAULT: {}

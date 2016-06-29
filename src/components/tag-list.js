@@ -29,7 +29,7 @@ export default React.createClass({
   editTag: function(id) {
     let edit = _.debounce(function(text) {
       store.dispatch(TagActions.update(id, {text}));
-    }, 500);
+    }, 1000);
 
     return evt => edit(evt.target.value);
   },

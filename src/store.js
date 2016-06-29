@@ -43,6 +43,8 @@ import todoTags from 'reducers/todo-tags';
 import page from 'reducers/page';
 
 const rootReducer = (state = {}, action) => {
+  if(action.type === 'INIT') state = action.state || {};
+
   let firstPass = {
     tags: tags(state.tags, action),
     todos: todos(state.todos, action),

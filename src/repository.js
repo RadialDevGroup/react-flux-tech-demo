@@ -1,6 +1,13 @@
 import i from 'underscore.inflection';
 import _ from 'lodash';
 
+// fetch = (function(fetch){
+//   return function() {
+//     console.log(arguments);
+//     return fetch.apply(null, arguments);
+//   }
+// })(fetch);
+
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 

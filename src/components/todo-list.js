@@ -44,17 +44,14 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    console.log('did mount');
     let forceUpdate = this.forceUpdate.bind(this);
 
     this.unsubscribe = store.subscribe(function() {
-      console.log('called');
       forceUpdate();
     });
   },
 
   componentWillUnmount: function() {
-    console.log("will unmount", this.unsubscribe);
     this.unsubscribe();
   },
 

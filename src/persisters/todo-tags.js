@@ -1,5 +1,10 @@
+import TodoTagRepository from 'repositories/todo-tag';
+
 export default function todoTagPersister(state, dispatch) {
-  let unpersistedADD = _.find(state.todoTags, {externalId: undefined});
+  let unpersistedADD = _.find(state.todoTags, function(todoTag) {
+    return ! todoTag.externalId;
+  });
+
   if(unpersistedADD) {
     let todo, tag;
 
@@ -9,35 +14,26 @@ export default function todoTagPersister(state, dispatch) {
     if(tag && tag.externalId && todo && todo.externalId) {
 
       TodoTagRepository
-        .create(unpersistedADD.externalId, {
+        .create({
           todo_id: todo.externalId,
           tag_id: tag.externalId
         })
         .then(function(todoTag){
           dispatch({
-            type: 'EDIT_TODO_TAG`',
+            type: 'EDIT_TODO_TAG',
             id: unpersistedADD.id,
-            externalId: todoTag.id
+            externalId: todoTag.id,
             todo_ExternalId: todo.externalId,
-            tag_ExternalId: tag.externalId
+            tag_ExternalId: tag.externalId,
             persisted: true
           });
-        });
+        }, function(error) {
+        dispatch({
+          type: 'PERSISTENCE_ERROR',
+          error: error
+        })
+      });
       return true;
     }
-  }
-
-  let unpersistedEdit = _.find(state.tags, {persisted: false});
-  if(unpersistedEdit && unpersistedEdit.externalId) {
-    TodoTagRepository
-      .update(unpersistedEdit.externalId, _.pick(unpersistedEdit, 'text'))
-      .then(function(){
-        dispatch({
-          type: 'EDIT_TODO',
-          id: unpersistedEdit.id,
-          persisted: true
-        });
-      });
-    return true;
   }
 }

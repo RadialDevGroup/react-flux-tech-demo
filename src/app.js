@@ -3,8 +3,6 @@ import uuid from 'lodash-uuid';
 _.mixin(uuid, {'chain': true});
 
 import store from 'store';
-import persister from 'persister'
-
 // store.dispatch = (function(dispatch){
 //   return function() {
 //     console.log("DISPATCHING", ...arguments);
@@ -12,20 +10,13 @@ import persister from 'persister'
 //     console.log("STATE", store.getState());
 //   };
 // })(store.dispatch);
-
-import TodoActions from 'actions/todo';
-import TagActions from 'actions/tag';
-import TodoTagActions from 'actions/todo-tag';
+import persister from 'persister';
 
 import Layout from 'components/layout';
 import TodoList from 'components/todo-list';
 import TodoTagsList from 'components/todo-tags-list';
 import TagList from 'components/tag-list';
 import Page from 'components/page';
-
-store.dispatch(TodoActions.fetch());
-store.dispatch(TagActions.fetch());
-store.dispatch(TodoTagActions.fetch());
 
 let render = () => {
   let state = store.getState();
@@ -58,13 +49,25 @@ let render = () => {
 
 store.dispatch(function() {type: 'DEFAULT'});
 
+import todos from 'persisters/todos';
+import tags from 'persisters/tags';
+import todoTags from 'persisters/todo-tags';
+import sync from 'persisters/sync';
+
+store.dispatch({
+  type: 'INIT', state: JSON.parse(localStorage.getItem('applicationState'))
+});
+
 let persisters = [
-  require('persisters/todos'),
-  require('persisters/tags'),
-  require('persisters/todo-tags')
-]
+  todos,
+  tags,
+  todoTags
+];
 
 store.subscribe(persister(store.dispatch, store.getState, persisters));
 
-console.log(store.getState());
+sync(store.getState(), store.dispatch);
+
 render();
+
+store.subscribe(_.debounce(() => localStorage.setItem('applicationState', JSON.stringify(store.getState())), 500));

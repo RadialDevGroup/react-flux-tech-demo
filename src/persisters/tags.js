@@ -1,5 +1,9 @@
+import TagRepository from 'repositories/tag';
+
 export default function tagPersister(state, dispatch) {
-  let unpersistedADD = _.find(state.tags, {externalId: undefined});
+  let unpersistedADD = _.find(state.tags, function(tag) {
+    return ! tag.externalId;
+  });
   if(unpersistedADD) {
     TagRepository
       .create(_.pick(unpersistedADD, 'text'))
@@ -7,15 +11,20 @@ export default function tagPersister(state, dispatch) {
         dispatch({
           type: 'EDIT_TAG',
           id: unpersistedADD.id,
-          externalId: tag.id
+          externalId: tag.id,
           persisted: true
         });
+      }, function(error) {
+        dispatch({
+          type: 'PERSISTENCE_ERROR',
+          error: error
+        })
       });
     return true;
   }
 
   let unpersistedEdit = _.find(state.tags, {persisted: false});
-  if(unpersistedEdit) {
+  if(unpersistedEdit && unpersistedEdit.externalId) {
     TagRepository
       .update(unpersistedEdit.externalId, _.pick(unpersistedEdit, 'text'))
       .then(function(){
@@ -24,6 +33,11 @@ export default function tagPersister(state, dispatch) {
           id: unpersistedEdit.id,
           persisted: true
         });
+      }, function(error) {
+        dispatch({
+          type: 'PERSISTENCE_ERROR',
+          error: error
+        })
       });
     return true;
   }
