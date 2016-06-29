@@ -1,12 +1,19 @@
 import tag from './tag';
 
+import { byExternalIdInSet } from './helpers/sync';
+
 export default function(state = [], action) {
   switch(action.type) {
-    case 'SYNC_TAG':
-      return [
-        ..._.reject(state, {externalId: action.externalId}),
-        tag(_.find(state, {externalId: action.externalId}), action)
-      ];
+    case 'SYNC':
+      let stateExternalIds = _.map(state, 'externalId');
+      let newTags = _.reject(action.tags, byExternalIdInSet(stateExternalIds));
+
+      return _.map(_.flatten([state, newTags]), t => {
+        let newAction = Object.assign({type: 'SYNC_TAG'},
+          t.externalId ? _.find(action.tags, _.pick(t, 'externalId')) : undefined
+        );
+        return tag(t, newAction);
+      });
     case 'ADD_TAG':
       return [...state, tag(undefined, action)];
     case 'EDIT_TAG':
