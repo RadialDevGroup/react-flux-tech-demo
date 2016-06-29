@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+
+
 const endsWithId = /_id$/;
 export function externalFromId(obj) {
   return _.mapKeys(obj, (v, key) =>  {
@@ -25,6 +27,18 @@ export function translateIds(obj) {
   return defaultId(externalFromId(obj));
 }
 
-export function translateForSync(objs) {
-  return _.map(objs, _.flow(preset({persisted: true}), translateIds));
+export const persisted = preset({persisted: true});
+export const translateForSync = _.flow(persisted, translateIds)
+
+export function translateEachForSync(objs) {
+  return _.map(objs, translateForSync);
+}
+
+export function handleError(error) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: 'PERSISTENCE_ERROR',
+      error: error
+    })
+  };
 }

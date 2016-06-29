@@ -2,7 +2,7 @@ import TodoTagRepository from 'repositories/todo-tag';
 import TodoRepository from 'repositories/todo';
 import TagRepository from 'repositories/tag';
 
-import { translateForSync } from 'persisters/helpers/base';
+import { translateEachForSync } from 'persisters/helpers/base';
 
 import _ from 'lodash';
 
@@ -17,7 +17,7 @@ export default function(state, dispatch) {
   Promise.all(promises)
     .then(function([tags, todos, todoTags]) {
       dispatch(Object.assign(
-        {type: 'SYNC'}, _.mapValues({tags, todos, todoTags}, translateForSync)
+        {type: 'SYNC'}, _.mapValues({tags, todos, todoTags}, translateEachForSync)
       ));
     }, function(error) {
       dispatch({

@@ -1,44 +1,31 @@
 import TagRepository from 'repositories/tag';
+import TagActions from 'actions/tag';
+
+import { translateForSync, handleError } from './helpers/base';
+
+let updateTag = function(original, dispatch) {
+  return function(tag) {
+    dispatch(TagActions.update(original.id, translateForSync(tag)));
+  };
+};
 
 export default function tagPersister(state, dispatch) {
-  let unpersistedADD = _.find(state.tags, function(tag) {
+  let newTag = _.find(state.tags, function(tag) {
     return ! tag.externalId;
   });
-  if(unpersistedADD) {
+
+  if(newTag) {
     TagRepository
-      .create(_.pick(unpersistedADD, 'text'))
-      .then(function(tag){
-        dispatch({
-          type: 'EDIT_TAG',
-          id: unpersistedADD.id,
-          externalId: tag.id,
-          persisted: true
-        });
-      }, function(error) {
-        dispatch({
-          type: 'PERSISTENCE_ERROR',
-          error: error
-        })
-      });
+      .create(_.pick(newTag, 'text'))
+      .then(updateTag(newTag, dispatch), handleError);
     return true;
   }
 
-  let unpersistedEdit = _.find(state.tags, {persisted: false});
-  if(unpersistedEdit && unpersistedEdit.externalId) {
+  let unpersistedTag = _.find(state.tags, {persisted: false});
+  if(unpersistedTag && unpersistedTag.externalId) {
     TagRepository
-      .update(unpersistedEdit.externalId, _.pick(unpersistedEdit, 'text'))
-      .then(function(){
-        dispatch({
-          type: 'EDIT_TAG',
-          id: unpersistedEdit.id,
-          persisted: true
-        });
-      }, function(error) {
-        dispatch({
-          type: 'PERSISTENCE_ERROR',
-          error: error
-        })
-      });
+      .update(unpersistedTag.externalId, _.pick(unpersistedTag, 'text'))
+      .then(updateTag(unpersistedTag, dispatch), handleError);
     return true;
   }
 }
