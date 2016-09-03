@@ -10,7 +10,7 @@ import store from 'store';
 //     console.log("STATE", store.getState());
 //   };
 // })(store.dispatch);
-import persister from 'persister';
+import persistenceManager from 'persistence-manager';
 
 import Layout from 'components/layout';
 import TodoList from 'components/todo-list';
@@ -64,7 +64,7 @@ let persisters = [
   todoTags
 ];
 
-store.subscribe(persister(store.dispatch, store.getState, persisters));
+store.subscribe(persistenceManager(store.dispatch, store.getState, persisters));
 
 sync(store.getState(), store.dispatch);
 
