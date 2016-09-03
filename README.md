@@ -30,4 +30,4 @@ npm test
 
 ## Process
 
-Currently this is a spike an may be abandoned without notice.  No process for improvement is defined
+Please read [PROCESS.md](PROCESS.md)
